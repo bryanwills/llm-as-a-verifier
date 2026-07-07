@@ -169,7 +169,7 @@ Under the hood, `select` runs the
 `O(N²)` round-robin. `pivots` trades cost for accuracy: more pivots = more
 comparisons = higher accuracy.
 
-### Adapt for your own use case
+### Adapt LLM-as-a-Verifier for your own use case
 
 Use the verifier for your own task in three steps — Claude Code does the rest
 (generates the criteria, writes a runner, and selects the best-of-N for you):
