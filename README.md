@@ -74,7 +74,7 @@ print(result.index)   # index of the best candidate: 0
 print(result.scores)  # candidate scores: [0.73104, 0.38446, 0.38449]
 ```
 
-### Score a pair of trajectories directly
+### Score a pair of candidates directly
 
 `select` is built on a pairwise reward model. For the raw fine-grained rewards
 of a single comparison, call `compare`:
