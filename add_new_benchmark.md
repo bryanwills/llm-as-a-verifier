@@ -49,7 +49,7 @@ trajectory was actually a success (look up the label for `result.index`).
 
 Have the runner save the run summary (chosen index, per-trajectory scores,
 whether the pick was correct, and the config used) to
-`/root/official_code/llm-as-a-verifier/results/task_name.txt`, matching the
+`results/task_name.txt`, matching the
 existing `results/` convention.
 
 ## 4. Check credentials
