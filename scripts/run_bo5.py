@@ -31,7 +31,7 @@ load_dotenv(ROOT_DIR)
 
 LABEL = "bo5"
 N_TRIALS = 5
-PIVOTS = 2
+PIVOTS = 1
 N_EVALUATIONS = 2
 
 
