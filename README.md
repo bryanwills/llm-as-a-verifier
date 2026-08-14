@@ -122,8 +122,8 @@ the verifier is judging its own model's work:
 
 | Config | Pass@1 | LLM-as-a-Verifier | Oracle |
 |---|---|---|---|
-| Best-of-3 | 79.4% | **85.4%** | 92.1% |
-| Best-of-5 | 78.7% | **88.8%** | 96.6% |
+| Best-of-3 | 79.4% | **86.5% ± 1.1%** | 92.1% |
+| Best-of-5 | 78.7% | **88.0% ± 0.6%** | 96.6% |
 
 The trajectories ship in `data/terminal_bench_2.1_trajs/`; scoring only needs
 `DEEPSEEK_API_KEY` in `.env`. Each configuration has its own reproduction
