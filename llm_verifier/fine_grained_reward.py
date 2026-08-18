@@ -504,6 +504,16 @@ def _score_tags_by_prefill(client, model, messages, text, tags,
             pos = choice.logprobs.content[0]
             alts = [(alt.token, alt.logprob)
                     for alt in (pos.top_logprobs or [])]
+            if not letter:
+                # Servers with a reasoning parser (e.g. vLLM
+                # --reasoning-parser glm45 / deepseek_r1) return the
+                # prefilled continuation as `reasoning` with content=None.
+                # Recover the sampled letter from the logprobs; an empty
+                # letter token would otherwise leave the running text
+                # ending in the open tag, so _find_tag_logprobs would pick
+                # the closing tag's position and every score would fall
+                # back to 0.5.
+                letter = (pos.token or (alts[0][0] if alts else "")).strip()
         closing = "</" + tag[1:]
         text = prefix + letter + closing
         tokens += [f"\n{tag}", letter, closing]
