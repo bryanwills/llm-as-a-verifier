@@ -498,21 +498,22 @@ def _score_tags_by_prefill(client, model, messages, text, tags,
             return text, tokens or None, position_logprobs or None
         USAGE.record(response)
         choice = response.choices[0]
-        letter = (choice.message.content or "").strip()
+        # Servers running a reasoning parser (vLLM --reasoning-parser
+        # glm45 / deepseek_v4 / deepseek_r1, ...) classify the
+        # prefill-continued token as reasoning, so message.content is None.
+        # Read the letter from the reasoning field (as in PR #6), and if the
+        # server exposes neither, recover it from the logprobs: the top
+        # token at this position IS the sampled letter.
+        letter = (choice.message.content
+                  or getattr(choice.message, "reasoning", None)
+                  or getattr(choice.message, "reasoning_content", None)
+                  or "").strip()
         alts = []
         if choice.logprobs and choice.logprobs.content:
             pos = choice.logprobs.content[0]
             alts = [(alt.token, alt.logprob)
                     for alt in (pos.top_logprobs or [])]
             if not letter:
-                # Servers with a reasoning parser (e.g. vLLM
-                # --reasoning-parser glm45 / deepseek_r1) return the
-                # prefilled continuation as `reasoning` with content=None.
-                # Recover the sampled letter from the logprobs; an empty
-                # letter token would otherwise leave the running text
-                # ending in the open tag, so _find_tag_logprobs would pick
-                # the closing tag's position and every score would fall
-                # back to 0.5.
                 letter = (pos.token or (alts[0][0] if alts else "")).strip()
         closing = "</" + tag[1:]
         text = prefix + letter + closing
@@ -644,7 +645,10 @@ def _find_tag_logprobs(tokens, position_logprobs, tag):
         text_so_far = ""
         for i, tok in enumerate(tokens):
             text_so_far += tok
-            if text_so_far.rstrip().endswith(suffix):
+            # An empty token (a parser swallowed the letter) must not
+            # re-match the tag and shadow the distribution captured at the
+            # previous position.
+            if tok and text_so_far.rstrip().endswith(suffix):
                 if i + 1 < len(position_logprobs):
                     found = position_logprobs[i + 1]
         if found is not None:
