@@ -2,11 +2,10 @@
 """
 Reproduce the best-of-5 self-verification result.
 
-Runs the tournament on all 5 trials of each task with pivots=2 and K=2
-repeated verifications (5 ring + 7 pivot-round pairs per swing task).
-Uses its own score cache (`<config cache>_bo5.json`) — never shared with the
-best-of-3 run — so the reported token usage is what best-of-5 uses on its
-own.
+Runs the tournament on all 5 trials of each task with pivots=1 and K=2
+repeated verifications. Uses its own score cache (`<config cache>_bo5.json`)
+— never shared with the best-of-3 run — so the reported token usage is what 
+best-of-5 uses on its own.
 
 Usage:
     python scripts/run_bo5.py                    # terminal_bench_2.1
