@@ -645,10 +645,14 @@ def _find_tag_logprobs(tokens, position_logprobs, tag):
         text_so_far = ""
         for i, tok in enumerate(tokens):
             text_so_far += tok
-            # An empty token (a parser swallowed the letter) must not
-            # re-match the tag and shadow the distribution captured at the
-            # previous position.
-            if tok and text_so_far.rstrip().endswith(suffix):
+            # An empty or whitespace-only token (a reasoning parser swallowed
+            # the letter, or the constrained sample landed on a bare space, a
+            # legal prefix of " A") leaves the stripped text unchanged, so the
+            # tag would match a SECOND time and shadow the distribution captured
+            # at the previous position (#5, #10).
+            if not tok.strip():
+                continue
+            if text_so_far.rstrip().endswith(suffix):
                 if i + 1 < len(position_logprobs):
                     found = position_logprobs[i + 1]
         if found is not None:
