@@ -6,6 +6,8 @@ time. Add a benchmark by adding an entry (and, if needed, a loader in
 `loaders.py` plus a criteria file in `criteria/`).
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 
 
@@ -32,7 +34,7 @@ BENCHMARKS = {
         criteria=["specification", "output_match", "error_signals"],
         cache="cache/cache_terminal_capy_gpt-5.5.json",
         results="results/terminal_bench_capy.txt",
-        data={"agent_dir": "data/terminal_bench_trajs/capy_gpt-5.5"},
+        data={"agent_dir": "data/terminal_bench_2.0_trajs/capy_gpt-5.5"},
     ),
     "terminal_bench_2.1": Benchmark(
         name="TERMINAL-BENCH 2.1  (mini-swe-agent · deepseek-v4-flash, x5)",
