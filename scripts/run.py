@@ -214,6 +214,10 @@ def run_benchmark(cfg, pivots=None, n_evaluations=None, seed=None,
 def report(cfg, n_tasks, n_runs, n_swing, criteria_ids, n_reps, k, seed,
            pass1, verifier, oracle, avg_cmp, usage=USAGE, comparisons=None,
            results_file=None):
+    def pct(x):
+        # An empty dataset reports "no tasks", it does not crash the run.
+        return f"{100 * x / n_tasks:>6.1f}%" if n_tasks else f"{'--':>7s}"
+
     lines = [
         "",
         "=" * 72,
@@ -225,12 +229,11 @@ def report(cfg, n_tasks, n_runs, n_swing, criteria_ids, n_reps, k, seed,
         "=" * 72,
         f"{'Method':<26s}  {'Score':>14s}  {'Rate':>7s}",
         "-" * 72,
-        f"{'Pass@1':<26s}  {pass1:>8.2f}/{n_tasks}  "
-        f"{100 * pass1 / n_tasks:>6.1f}%",
+        f"{'Pass@1':<26s}  {pass1:>8.2f}/{n_tasks}  " + pct(pass1),
         f"{'LLM-as-a-Verifier':<26s}  {verifier:>8d}/{n_tasks}  "
-        f"{100 * verifier / n_tasks:>6.1f}%",
+        + pct(verifier),
         f"{'Oracle (Bo' + str(n_runs) + ')':<26s}  {oracle:>8d}/{n_tasks}  "
-        f"{100 * oracle / n_tasks:>6.1f}%",
+        + pct(oracle),
         "-" * 72,
         # Tokens used by THIS run; cached comparisons use none.
         *format_usage(usage),
